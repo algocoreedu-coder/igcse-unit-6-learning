@@ -1,46 +1,53 @@
 # AlgoCore — Unit 6 Learning
 
-Website HTML/CSS/JavaScript phục vụ giảng dạy và tự học Cambridge IGCSE Computer Science 0478, phạm vi thi 2026–2028.
+An HTML, CSS and JavaScript teaching and study website for Cambridge IGCSE Computer Science 0478, for exams in 2026–2028.
 
-## Sử dụng
+All teaching content, instructions, activities, feedback and reference material use English. Explanations use short sentences and simple vocabulary while keeping the technical terms needed for the course.
 
-Mở `dist/index.html` trong trình duyệt hoặc dùng bản website đã triển khai. Bản offline cần giữ toàn bộ thư mục `dist` cùng các ảnh. Các trang bài học dùng địa chỉ dạng `#49/mechanism`, vì vậy không cần máy chủ để chuyển bài.
+## Open the course
 
-- 4 buổi chính: 49 Automated systems, 50 Robotics, 51 AI & expert systems, 52 Machine learning.
-- 40 mục học tập/sổ tay/ôn tập; 111 câu hỏi biên soạn riêng.
-- 16 visual chính và 10 phiên bản bỏ nhãn; 4 mô phỏng/hoạt động.
-- Mỗi buổi có 6 câu đầu buổi, câu kiểm tra ngắn sau lý thuyết, 6 bài luyện độc lập, 3 câu cuối buổi và 2 lượt ôn giữa tuần.
-- Có bộ ôn tích lũy 53, 54, 56 và bài vận dụng theo phong cách câu hỏi thi, kèm tiêu chí luyện tập nội bộ.
-- Lý thuyết và hướng dẫn tiếng Việt; thuật ngữ, câu hỏi và mẫu trả lời tiếng Anh. Học viên có thể ghi ý bằng tiếng Việt trước khi viết câu trả lời.
+Open `dist/index.html` in a browser, or use the deployed website. For offline use, keep the entire `dist` folder and its images together. Lesson addresses such as `#49/mechanism` work without a server.
 
-## Giảng trực tiếp
+- Four main lessons: 49 Automated systems, 50 Robotics, 51 AI and expert systems, 52 Machine learning.
+- 40 lesson, review and handbook sections; 111 original questions.
+- 16 main visuals and 10 versions with labels hidden; four interactive activities.
+- Each lesson includes six starter questions, short checks after theory, six independent practice questions, three exit questions and two between-lesson reviews.
+- Spaced reviews for lessons 53, 54 and 56, plus exam-style practice with course-specific self-check criteria.
 
-Chọn buổi và phần bài trong mục lục. Nút Trình chiếu tăng cỡ chữ, ẩn mục lục và cho mở dần các khối nội dung. Dùng nút Phần trước/tiếp hoặc phím mũi tên khi không nhập câu trả lời; Space hiện ý tiếp. Phím không bị chiếm khi đang nhập văn bản hoặc chọn điều khiển.
+## Teach directly from the website
 
-Nhấp visual để phóng to; bật bản bỏ nhãn để kiểm tra nhớ lại. Khi trình chiếu, giáo viên có thể mở mẫu trả lời tự luận mà không cần nhập đáp án mẫu trước. Đây là chức năng phục vụ giảng dạy, không phải cơ chế phân quyền hay bảo mật đáp án.
+Choose a lesson and section from the contents. **Present** makes the text larger, hides the sidebar and allows you to reveal ideas one at a time. Use the previous and next buttons, or the arrow keys when you are not typing or focused on a control. Press Space to show the next idea.
 
-Tự luận có mẫu và checklist ý cần có, không chấm tự động bằng từ khóa. Trắc nghiệm, ghép cặp và sắp xếp có phản hồi, lưu điểm lần đầu và gần nhất. Sắp xếp tính điểm luyện tập theo số bước đúng vị trí. Các tiêu chí không phải mark scheme Cambridge chính thức.
+Select a visual to enlarge it. Where available, hide its labels and ask students to recall them. In presentation mode, teachers can open written model answers without entering an answer first. This supports teaching; it is not an answer-security feature.
 
-Nút In bài in mục đang mở, giữ ẩn lời giải chưa mở. Câu trả lời và lịch sử thử lưu cục bộ nếu trình duyệt cho phép, không đồng bộ thiết bị hay gửi điểm cho giáo viên. Không có cơ chế chấm điểm toàn lớp hoặc tự gửi lịch nhắc.
+Written questions have model answers and checklists. They are not marked automatically by keywords. Multiple-choice, matching and ordering questions give feedback and save the first and latest scores. Ordering questions earn one practice mark per correctly placed step. These criteria are not official Cambridge mark schemes.
 
-## Mô phỏng
+**Print** prints the current section and keeps unopened answers hidden. Answers and attempt history are saved locally when the browser allows it. They do not sync between devices or send grades to the teacher. There is no class gradebook or automatic reminder service.
 
-1. **Nhà kính:** điều chỉnh nhiệt độ/ẩm đất/ánh sáng; chạy từng bước hoặc một chu trình; có biên ngưỡng, mất dữ liệu, reset. Mô hình tính lệnh điều khiển, không giả lập động lực học của môi trường. Cách giữ OFF khi mất số đo được chọn cho bài minh họa, không phải quy tắc an toàn chung.
-2. **Robot:** chọn nhóm bộ phận xem chức năng, ghép sensor/controller/actuator theo bối cảnh kho, gia đình hoặc nông nghiệp.
-3. **Expert system:** ba phương tiện, hai thuộc tính; thể hiện dữ kiện, knowledge base, rule base, đường suy luận và kết quả. Có trạng thái thiếu dữ kiện và không khớp luật.
-4. **ML:** sáu mẫu huấn luyện và bốn mẫu kiểm tra riêng. Cách chọn mẫu gần nhất là minh họa đơn giản; nhãn được sửa phải huấn luyện lại mới dùng để dự đoán. Sửa mẫu #4 từ A sang B với X=(6,5) đổi dự đoán A→B; bộ kiểm tra cố định thay đổi 3/4→4/4. Không suy rộng kết quả này ra các hệ ML thực tế.
+## Interactive activities
 
-## Biên tập tiếp
+1. **Greenhouse:** adjust temperature, soil moisture and light. Run one step or a full cycle; try threshold boundaries, missing data and reset. The model calculates control commands, not changes in the physical environment. Keeping outputs OFF when readings are missing is a choice for this activity, not a general safety rule.
+2. **Robot:** explore part functions, then match a sensor, controller and actuator to warehouse, home or farming tasks.
+3. **Expert system:** identify one of three vehicles using two properties. Follow the facts, knowledge base, rule base, reasoning and result. Try missing information or a case with no matching rule.
+4. **ML:** use six training examples and four separate test examples. The nearest-example method is a simple illustration. After changing a label, train again before predicting. Changing example #4 from A to B with X=(6,5) changes the prediction from A to B and the fixed test score from 3/4 to 4/4. This does not guarantee similar results in other ML systems.
 
-- `dist/content.js`: lý thuyết, mục tiêu, câu hỏi, đáp án, mốc ôn và tham chiếu.
-- `dist/app.js`: điều hướng, trình chiếu, bài tập và lưu trình duyệt.
-- `dist/labs.js`: 4 hoạt động.
-- `dist/styles.css`: giao diện máy tính, điện thoại và in.
-- `dist/visuals.js`, `dist/assets/`: thông tin và bộ hình.
-- `dist/webmcp.js`: tích hợp tùy chọn khi trình duyệt hỗ trợ; website bình thường không phụ thuộc vào tính năng này.
+## Editing
 
-Đối chiếu nguồn và bản đồ mục tiêu trong Sổ tay → Nguồn & cách sử dụng / Mục tiêu cần đạt. Syllabus: https://www.cambridgeinternational.org/Images/697167-2026-2028-syllabus.pdf. Coursebook Unit 6 trang in 217–256; Workbook 1 Unit 6 trang in 84–95.
+- `dist/content.js`: theory, goals, questions, answers, review schedule and sources.
+- `dist/app.js`: navigation, presentation mode, questions and browser storage.
+- `dist/labs.js`: the four activities.
+- `dist/styles.css`: desktop, mobile and print styles.
+- `dist/visuals.js` and `dist/assets/`: image descriptions and assets.
+- `dist/webmcp.js`: optional browser integration. The website works without it.
 
-## Kiểm tra thực hiện
+See **Handbook → Sources and how to use this website** and **Learning goals** for source references and coverage.
 
-Đã kiểm tra 40 địa chỉ bài, ảnh, câu hỏi có phản hồi, lưu và tải lại, bốn mô phỏng, biên ngưỡng, thiếu dữ kiện, thay nhãn, trình chiếu, bàn phím và bố cục di động. Bộ kiểm tra tự động đặt ngoài thư mục xuất bản. API WebMCP là tùy chọn; kiểm thử bằng bộ giả lập API không thay thế xác nhận trong trình duyệt hỗ trợ thật.
+Syllabus: https://www.cambridgeinternational.org/Images/697167-2026-2028-syllabus.pdf  
+Coursebook Unit 6: printed pp. 217–256. Workbook 1 Unit 6: printed pp. 84–95.
+
+## Validation
+
+The original website was checked across all 40 routes, question feedback, saved answers, four activities, presentation controls, keyboard use and mobile layout.
+
+The English update was checked for JavaScript syntax, content structure, route references, asset references and remaining Vietnamese text. Question identifiers and answer keys remain unchanged, preserving existing browser work. The English update did not include a new browser layout test.
+
