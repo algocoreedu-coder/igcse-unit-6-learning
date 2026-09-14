@@ -4,6 +4,15 @@ An HTML, CSS and JavaScript teaching and study website for Cambridge IGCSE Compu
 
 All teaching content, instructions, activities, feedback and reference material use English. Explanations use short sentences and simple vocabulary while keeping the technical terms needed for the course.
 
+## Public website
+
+- Study online: https://algocoreedu-coder.github.io/igcse-unit-6-learning/
+- Source repository: https://github.com/algocoreedu-coder/igcse-unit-6-learning
+
+The public website does not require a GitHub account. GitHub Pages publishes the `dist` folder. Changes to `dist` pushed to `main` deploy automatically through `.github/workflows/pages.yml`. The workflow can also be run manually from the repository's Actions tab.
+
+The original textbook and workbook PDFs are not included. Use your own copies for the source exercises.
+
 ## Open the course
 
 Open `dist/index.html` in a browser, or use the deployed website. For offline use, keep the entire `dist` folder and its images together. Lesson addresses such as `#49/mechanism` work without a server.
@@ -50,4 +59,3 @@ Coursebook Unit 6: printed pp. 217–256. Workbook 1 Unit 6: printed pp. 84–95
 The original website was checked across all 40 routes, question feedback, saved answers, four activities, presentation controls, keyboard use and mobile layout.
 
 The English update was checked for JavaScript syntax, content structure, route references, asset references and remaining Vietnamese text. Question identifiers and answer keys remain unchanged, preserving existing browser work. The English update did not include a new browser layout test.
-
