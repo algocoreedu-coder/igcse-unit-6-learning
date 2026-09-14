@@ -3,6 +3,7 @@
  const context=document.modelContext;if(!context?.registerTool)return;
  const life=new AbortController();
  const tool={name:'run_greenhouse_example',title:'Run greenhouse control example',description:'On the greenhouse lesson, set the three sensor readings and run the same four control steps as the visible interface. Returns the displayed output; does not change answers or navigate.',inputSchema:{type:'object',properties:{temperature:{type:'number',minimum:0,maximum:50},moisture:{type:'number',minimum:0,maximum:100},light:{type:'number',minimum:0,maximum:100},sensorFault:{type:'boolean'}},required:['temperature','moisture','light'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){
+  if(!Access.role())throw new Error('Enter the classroom first.');
   if(!input||typeof input!=='object')throw new Error('Expected sensor readings.');
   const allowed=['temperature','moisture','light','sensorFault'];if(Object.keys(input).some(k=>!allowed.includes(k)))throw new Error('Unknown input field.');
   for(const [key,max]of [['temperature',50],['moisture',100],['light',100]])if(typeof input[key]!=='number'||!Number.isFinite(input[key])||input[key]<0||input[key]>max)throw new Error('Invalid '+key);

@@ -2,9 +2,15 @@
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const groups=[...U6.lessons,...U6.extras], routes=groups.flatMap(g=>g.sections.map(s=>({g,s,key:g.id+'/'+s.id})));
-const KEY='algocore-unit6-learning-v1';
+const STUDENT_KEY='algocore-unit6-learning-v1';
+let KEY=STUDENT_KEY;
 let saved={answers:{},attempts:{},rubrics:{}},storageOK=true;
-try{const raw=JSON.parse(localStorage.getItem(KEY)||'null');if(raw&&typeof raw==='object'&&raw.answers&&raw.attempts&&raw.rubrics)saved=raw;}catch{storageOK=false;}
+function loadWork(){
+ KEY=Access.isTeacher()?STUDENT_KEY+'-teacher':STUDENT_KEY;
+ saved={answers:{},attempts:{},rubrics:{}};storageOK=true;
+ try{const raw=JSON.parse(localStorage.getItem(KEY)||'null');if(raw&&typeof raw==='object'&&raw.answers&&raw.attempts&&raw.rubrics)saved=raw;}catch{storageOK=false;}
+}
+
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(saved));}catch{storageOK=false;const el=$('save-status');if(el)el.textContent='This browser cannot save your work. Keep a separate copy of your answers.';}}
 let active=routes[0],presenting=false,revealed=1,currentVisual=null,blankImage=false;
 const kindNames={retrieval:'Recall',theory:'Theory',applications:'Apply',lab:'Activity',practice:'Practice',exit:'Exit ticket',homework:'Between-lesson review',exam:'Exam practice',reference:'Handbook'};
@@ -22,7 +28,7 @@ function qHTML(q,n){
  else if(q.type==='written')inputs=`<textarea aria-label="Answer: ${esc(q.prompt)}" placeholder="Write your answer here. Use short, clear sentences…"></textarea>`;
  else if(q.type==='match')inputs=q.pairs.map((p,i)=>`<div class="match-row"><label for="${q.id}-${i}">${esc(p[0])}</label><select id="${q.id}-${i}" aria-label="${esc(p[0])}"><option value="">Choose a function…</option>${q.options.map((o,j)=>`<option value="${j}">${esc(o)}</option>`).join('')}</select></div>`).join('');
  else inputs=q.items.map((_,i)=>`<div class="match-row"><label for="${q.id}-${i}">Step ${i+1}</label><select id="${q.id}-${i}"><option value="">Choose a step…</option>${q.items.map((o,j)=>`<option value="${j}">${esc(o)}</option>`).join('')}</select></div>`).join('');
- return `<article class="question" data-q="${q.id}"><div class="q-meta"><span>QUESTION ${n+1} · ${q.type==='written'?'WRITTEN — SELF-CHECK':q.type==='order'?'PUT IN ORDER':q.type==='match'?'MATCH':'MULTIPLE CHOICE'}</span><span>${q.marks} practice ${q.marks===1?'mark':'marks'}</span></div><h3>${esc(q.prompt)}</h3><div class="q-inputs">${inputs}</div><p class="q-warning" hidden role="status"></p><div class="q-actions"><button class="check primary">${q.type==='written'?(presenting?'Show model answer':'Check my written answer'):'Check answer'}</button><button class="retry">Try again</button></div><div class="feedback" hidden aria-live="polite"></div><p class="score-line"></p></article>`;
+ return `<article class="question" data-q="${q.id}"><div class="q-meta"><span>QUESTION ${n+1} · ${q.type==='written'?'WRITTEN — SELF-CHECK':q.type==='order'?'PUT IN ORDER':q.type==='match'?'MATCH':'MULTIPLE CHOICE'}</span><span>${q.marks} practice ${q.marks===1?'mark':'marks'}</span></div><h3>${esc(q.prompt)}</h3><div class="q-inputs">${inputs}</div><p class="q-warning" hidden role="status"></p><div class="q-actions"><button class="check primary">${q.type==='written'?(presenting&&Access.isTeacher()?'Show model answer':'Check my written answer'):'Check answer'}</button><button class="retry">Try again</button></div><div class="feedback" hidden aria-live="polite"></div><p class="score-line"></p></article>`;
 }
 function currentAnswer(el,q){
  if(q.type==='written')return el.querySelector('textarea').value;
@@ -41,7 +47,7 @@ function questionHistory(el,q){
 function checkQuestion(el,q){
  const ans=currentAnswer(el,q),warn=el.querySelector('.q-warning');
  const missing=Array.isArray(ans)?ans.some(x=>x===''):String(ans).trim()==='';
- if(missing&&!(presenting&&q.type==='written')){warn.textContent='Complete your answer before opening the feedback.';warn.hidden=false;return;}
+ if(missing&&!(presenting&&Access.isTeacher()&&q.type==='written')){warn.textContent='Complete your answer before opening the feedback.';warn.hidden=false;return;}
  if(q.type==='order'&&new Set(ans).size!==ans.length){warn.textContent='Use each step once. Check for repeated choices.';warn.hidden=false;return;}
  warn.hidden=true;const fb=el.querySelector('.feedback');fb.hidden=false;
  saved.answers[q.id]=ans;
@@ -81,12 +87,14 @@ function applyReveal(){
 function revealNext(){revealed++;applyReveal();}
 function render(){
  Lab.cleanup?.();
+ if(!Access.role()){$('content').innerHTML='';return;}
  const hash=decodeURIComponent(location.hash.slice(1)),found=routes.find(r=>r.key===hash);active=found||routes[0];
  if(!found&&hash)window.history.replaceState(null,'','#'+active.key);
  document.title=`${active.s.title} · Unit 6 · AlgoCore`;renderNav();
  $('breadcrumb').textContent=`UNIT 6 / ${/^\d/.test(active.g.id)?'LESSON '+active.g.id:active.g.title.toUpperCase()}`;
  const s=active.s,g=active.g;
  $('content').innerHTML=`<div class="lesson-head"><p class="eyebrow">${esc(kindNames[s.kind]||s.kind)} · ${esc(g.syllabus)}</p><h1>${esc(s.title)}</h1><p class="lead">${esc(s.lead)}</p><div class="chips"><span class="chip">${esc(g.title)}</span><span class="chip">${esc(s.minutes)}</span>${s.kind==='retrieval'?'<span class="chip">Answer before checking your notes</span>':''}</div></div>${s.id==='start'&&g.goals?`<details class="teacher-note"><summary>Learning goals</summary><ul>${g.goals.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p>Spend 10 minutes discussing starter errors before teaching the new content.</p></details>`:''}<div id="reveal-bar" class="reveal-toolbar" hidden><button id="reveal-next" class="primary">Show next idea</button><span id="reveal-position"></span></div>${s.html||''}${s.visuals?.length?`<div class="visual-grid reveal-block">${s.visuals.map(visualHTML).join('')}</div>`:''}${s.lab?'<section id="lab-host" class="lab" aria-label="Interactive activity"></section>':''}${s.questions?.length?`<section aria-label="Questions" class="question-set"><p class="eyebrow">${s.kind==='theory'||s.kind==='applications'?'PAUSE & PRACTISE':'ANSWER & CHECK'}</p>${s.questions.map(qHTML).join('')}<p id="save-status" class="source-note">${storageOK?'Your answers are saved in this browser. Model answers stay hidden when you return.':'This browser cannot save your work. Keep a separate copy of your answers.'}</p></section>`:''}<p class="source-note">Sources: ${esc(g.source)}</p>`;
+ if(!Access.isTeacher())$('content').querySelectorAll('.teacher-note').forEach(el=>el.remove());
  bindQuestions();if(s.lab)Lab.mount(s.lab,$('lab-host'));
  revealed=1;applyReveal();$('reveal-next').addEventListener('click',revealNext);
  const index=routes.indexOf(active);$('previous').disabled=index===0;$('next').disabled=index===routes.length-1;$('position').textContent=`${g.sections.indexOf(s)+1} / ${g.sections.length} sections`;
@@ -94,20 +102,50 @@ function render(){
  document.querySelectorAll('.visual-open').forEach(el=>el.onclick=()=>openVisual(Number(el.dataset.visual),el.closest('figure').querySelector('.visual-blank')?.getAttribute('aria-pressed')==='true'));
  document.querySelectorAll('.visual-blank').forEach(el=>el.onclick=()=>{const v=visuals.find(v=>v.id===Number(el.dataset.visual)),on=el.getAttribute('aria-pressed')!=='true';el.setAttribute('aria-pressed',String(on));el.textContent=on?'Show labels and check':'Hide labels and recall';el.closest('figure').querySelector('img').src='assets/'+(on?v.exercise:v.image);});
  document.body.classList.remove('menu-open');$('menu').setAttribute('aria-expanded','false');
- scrollTo(0,0);$('content').focus({preventScroll:true});
+ renderTeachingScript();
+ scrollTo(0,0);if(!$('teaching-dialog').open)$('content').focus({preventScroll:true});
 }
 function updateVisual(){const v=currentVisual;$('image-title').textContent=v.title;$('large-image').src='assets/'+(blankImage&&v.exercise?v.exercise:v.image);$('large-image').alt=v.title+(blankImage?' — unlabelled version':'');$('image-question').textContent=v.question;$('image-version').hidden=!v.exercise;$('image-version').textContent=blankImage?'Show labels':'Hide labels';}
 function openVisual(id,blank=false){currentVisual=visuals.find(v=>v.id===id);blankImage=blank;updateVisual();$('image-dialog').showModal();document.body.classList.add('modal-open');}
 $('image-version').onclick=()=>{blankImage=!blankImage;updateVisual();};$('close-image').onclick=()=>$('image-dialog').close();$('image-dialog').addEventListener('close',()=>document.body.classList.remove('modal-open'));
-$('present').onclick=()=>{presenting=!presenting;document.body.classList.toggle('presenting',presenting);$('present').textContent=presenting?'Exit presentation':'Present';$('present').setAttribute('aria-pressed',String(presenting));revealed=1;applyReveal();document.querySelectorAll('.question').forEach(el=>{if(el.querySelector('textarea'))el.querySelector('.check').textContent=presenting?'Show model answer':'Check my written answer';if(presenting)el.querySelector('.feedback').hidden=true;});};
+$('present').onclick=()=>{presenting=!presenting;document.body.classList.toggle('presenting',presenting);$('present').textContent=presenting?'Exit presentation':'Present';$('present').setAttribute('aria-pressed',String(presenting));revealed=1;applyReveal();document.querySelectorAll('.question').forEach(el=>{if(el.querySelector('textarea'))el.querySelector('.check').textContent=presenting&&Access.isTeacher()?'Show model answer':'Check my written answer';if(presenting)el.querySelector('.feedback').hidden=true;});};
 $('print').onclick=()=>window.print();$('menu').onclick=()=>{const open=document.body.classList.toggle('menu-open');$('menu').setAttribute('aria-expanded',String(open));};
 document.addEventListener('click',e=>{if(document.body.classList.contains('menu-open')&&!e.target.closest('#sidebar,#menu')){document.body.classList.remove('menu-open');$('menu').setAttribute('aria-expanded','false');}});
 document.addEventListener('keydown',e=>{
  if(e.key==='Escape'){document.body.classList.remove('menu-open');$('menu').setAttribute('aria-expanded','false');}
- if(!presenting||$('image-dialog').open||e.target.closest('input,textarea,select,button,a,summary,[contenteditable]'))return;
+ if(!Access.role()||!presenting||$('image-dialog').open||$('teaching-dialog').open||e.target.closest('input,textarea,select,button,a,summary,[contenteditable]'))return;
  if(e.key==='ArrowRight'){e.preventDefault();$('next').click();}
  if(e.key==='ArrowLeft'){e.preventDefault();$('previous').click();}
  if(e.code==='Space'){e.preventDefault();revealNext();}
 });
+let scriptSize=18;
+function renderTeachingScript(){
+ const host=$('script-body');
+ if(!Access.isTeacher()){host.innerHTML='';return;}
+ const t=TEACHING_SCRIPTS[active.key];
+ $('script-title').textContent=active.g.id+' · '+active.s.title;
+ if(!t){host.textContent='No teaching script is available for this section.';return;}
+ host.innerHTML=`<p class="script-aim"><b>Goal:</b> ${esc(t.aim)}</p>${t.say.map(([title,text])=>`<section class="script-block"><h3>${esc(title)}</h3><span class="script-label">SAY</span><p>${esc(text)}</p></section>`).join('')}<section class="script-block script-example"><h3>Show an example</h3><p class="script-direction"><b>DO:</b> ${esc(t.demo[0])}</p><span class="script-label">SAY</span><p>${esc(t.demo[1])}</p></section><section class="script-block"><h3>Check understanding</h3><p><b>ASK:</b> ${esc(t.check[0])}</p><p class="script-direction">Pause. Give students time to think.</p><p><b>LISTEN FOR:</b> ${esc(t.check[1])}</p><p><b>IF THEY NEED HELP:</b> ${esc(t.check[2])}</p></section><section class="script-block"><h3>Move on</h3><p>${esc(t.close)}</p></section>${active.s.questions?.length?`<details class="script-question-guide"><summary>Question-by-question teaching notes (${active.s.questions.length})</summary>${active.s.questions.map((q,i)=>`<section class="script-block"><h3>${i+1}. ${esc(q.prompt)}</h3><p><b>SAY:</b> Try this question first. Then explain how you chose your answer.</p><p><b>LISTEN FOR:</b> ${esc(q.type==='written'?q.model:q.type==='mc'?q.options[q.correct]:q.type==='match'?q.pairs.map(p=>p[0]+' → '+q.options[p[1]]).join('; '):q.correct.map((v,i)=>(i+1)+'. '+q.items[v]).join(' → '))}</p>${q.rubric?`<ul>${q.rubric.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:`<p><b>EXPLAIN:</b> ${esc(q.explain)}</p>`}</section>`).join('')}</details>`:''}`;
+ const i=routes.indexOf(active);$('script-previous').disabled=i===0;$('script-next').disabled=i===routes.length-1;
+ host.style.fontSize=scriptSize+'px';
+ if($('teaching-dialog').open)$('teaching-dialog').scrollTop=0;
+}
+$('open-script').onclick=()=>{if(!Access.isTeacher())return;renderTeachingScript();$('teaching-dialog').showModal();document.body.classList.add('modal-open');};
+$('close-script').onclick=()=>$('teaching-dialog').close();
+$('teaching-dialog').addEventListener('close',()=>document.body.classList.remove('modal-open','printing-script'));
+$('script-smaller').onclick=()=>{scriptSize=Math.max(16,scriptSize-2);$('script-body').style.fontSize=scriptSize+'px';};
+$('script-larger').onclick=()=>{scriptSize=Math.min(28,scriptSize+2);$('script-body').style.fontSize=scriptSize+'px';};
+$('script-previous').onclick=()=>{const i=routes.indexOf(active);if(Access.isTeacher()&&i>0)navigate(routes[i-1].key);};
+$('script-next').onclick=()=>{const i=routes.indexOf(active);if(Access.isTeacher()&&i<routes.length-1)navigate(routes[i+1].key);};
+$('script-print').onclick=()=>{if(!Access.isTeacher())return;document.body.classList.add('printing-script');window.print();};
+window.addEventListener('afterprint',()=>document.body.classList.remove('printing-script'));
+
 window.addEventListener('hashchange',render);
-render();
+Access.init(()=>{
+ Lab.cleanup?.();
+ ['image-dialog','teaching-dialog'].forEach(id=>{if($(id).open)$(id).close();});
+ document.body.classList.remove('presenting','modal-open','menu-open');
+ presenting=false;revealed=1;$('present').textContent='Present';$('present').setAttribute('aria-pressed','false');
+ $('menu').setAttribute('aria-expanded','false');loadWork();render();
+ if(!Access.role()){document.title='Enter classroom · Unit 6 · AlgoCore';$('script-body').innerHTML='';}
+});

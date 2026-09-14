@@ -25,6 +25,12 @@ Open `dist/index.html` in a browser, or use the deployed website. For offline us
 
 ## Teach directly from the website
 
+Choose **Student** or **Teacher** on the entry page and enter the matching four-digit class code. The selected role stays in this tab using session storage. **Sign out** returns to the entry page. Student practice keeps the existing browser storage key; teacher practice uses a separate key so demonstrations do not overwrite student work on the same browser.
+
+This is a simple classroom role gate on a static GitHub Pages website, not secure authentication. Codes and teaching scripts can be inspected in the public source, and browser role state can be changed. Do not use it to protect private records or confidential material. Real access protection would require a server-side authentication service.
+
+In Teacher mode, **Teaching script** opens a reading panel for the current section. All 40 sections have original spoken English scripts, examples to demonstrate, questions to ask, expected answers, prompts for students who need help, and a closing transition. Sections with questions also have question-by-question teaching notes. Use **A− / A+**, **Print script**, and the previous/next controls in the panel. Close it before sharing the lesson screen: a script visible on your screen is also visible to anyone watching that screen.
+
 Choose a lesson and section from the contents. **Present** makes the text larger, hides the sidebar and allows you to reveal ideas one at a time. Use the previous and next buttons, or the arrow keys when you are not typing or focused on a control. Press Space to show the next idea.
 
 Select a visual to enlarge it. Where available, hide its labels and ask students to recall them. In presentation mode, teachers can open written model answers without entering an answer first. This supports teaching; it is not an answer-security feature.
@@ -44,6 +50,8 @@ Written questions have model answers and checklists. They are not marked automat
 
 - `dist/content.js`: theory, goals, questions, answers, review schedule and sources.
 - `dist/app.js`: navigation, presentation mode, questions and browser storage.
+- `dist/access.js`: classroom code matching and tab-local role selection.
+- `dist/teaching-scripts.js`: spoken teaching scripts for all 40 sections.
 - `dist/labs.js`: the four activities.
 - `dist/styles.css`: desktop, mobile and print styles.
 - `dist/visuals.js` and `dist/assets/`: image descriptions and assets.
@@ -59,3 +67,5 @@ Coursebook Unit 6: printed pp. 217–256. Workbook 1 Unit 6: printed pp. 84–95
 The original website was checked across all 40 routes, question feedback, saved answers, four activities, presentation controls, keyboard use and mobile layout.
 
 The English update was checked for JavaScript syntax, content structure, route references, asset references and remaining Vietnamese text. Question identifiers and answer keys remain unchanged, preserving existing browser work. The English update did not include a new browser layout test.
+
+The classroom-role update was checked in a browser for both matching codes, wrong-role codes, entry through a deep link, role persistence, sign-out, student and teacher work separation, unavailable storage, all 40 teaching scripts, the 111 question notes, script navigation, presentation answers, desktop and mobile layouts, and complete script printing.
